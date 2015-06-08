@@ -1,6 +1,8 @@
-## DS-04-Assignment-01-02.R
+## plot3.R
+
+## DS-04-Assignment-01-03.R
 ## DS-04 Exploratory Data Analysis
-## Course Project
+## Energy by Metering
 
 rm(list=ls())
 cat('\014')
@@ -51,12 +53,28 @@ dt <- fread(source_dataset,header=TRUE)
 # 2007-02-01 and 2007-02-02
 
 dt$Date.formatted <- ymd(dt$Date.formatted)
+tz(dt$Date.formatted) <- "America/Los_Angeles"
+dt$Time.formatted <- hms(dt$Time)
+dt$DateTime.formatted <- dt$Date.formatted + dt$Time.formatted
 
-# Generate plot1.png as per instructions
-hist(as.numeric(dt$Global_active_power),col="red", main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
+# Generate plot3.png as per instructions
 
-# Copy Histogram to PNG
+# Coerce Sub_meterine_1 to be numeric
 
-dev.copy(png,'plot1.png')
+dt$Sub_metering_1 <- as.numeric(dt$Sub_metering_1)
+dt$Sub_metering_2 <- as.numeric(dt$Sub_metering_2)
+dt$Sub_metering_3 <- as.numeric(dt$Sub_metering_3)
+
+# plot Energy by Metering by selected day of week
+plot(dt$DateTime.formatted,dt$Sub_metering_1, type="l", ylab="Energy sub metering", xlab="")
+par(mar=c(5,4,4,3))
+lines(dt$DateTime.formatted,dt$Sub_metering_2,col="red",lwd=2.5)
+lines(dt$DateTime.formatted,dt$Sub_metering_3,col="blue",lwd=2.5) # adds a line for defense expenditures 
+legend("topright", col = c("black","red","blue"), lty = c(1,1,1), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+axis(1,at=c(5,6,7),labels=c("Thu","Fri","Sat"), tck=-.05)
+
+# Copy Image to PNG
+
+dev.copy(png,'plot3.png')
 
 dev.off()

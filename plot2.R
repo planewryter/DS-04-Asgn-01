@@ -1,6 +1,6 @@
-## DS-04-Assignment-01-02.R
+## DS-04-Assignment-01-04.R
 ## DS-04 Exploratory Data Analysis
-## Course Project
+## Global Active Power Plot
 
 rm(list=ls())
 cat('\014')
@@ -51,12 +51,21 @@ dt <- fread(source_dataset,header=TRUE)
 # 2007-02-01 and 2007-02-02
 
 dt$Date.formatted <- ymd(dt$Date.formatted)
+tz(dt$Date.formatted) <- "America/Los_Angeles"
+dt$Time.formatted <- hms(dt$Time)
+dt$DateTime.formatted <- dt$Date.formatted + dt$Time.formatted
 
-# Generate plot1.png as per instructions
-hist(as.numeric(dt$Global_active_power),col="red", main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
+# Generate plot2.png as per instructions
 
-# Copy Histogram to PNG
+# plot Global Active Power (kilowatts) by selected day of week
 
-dev.copy(png,'plot1.png')
+# plot(dt$DateTime.formatted,dt$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlim=c(5,7), xlab="", xaxp=c(5,7,1), xaxt="n")
+
+plot(dt$DateTime.formatted,dt$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="")
+axis(1,at=c(5,6,7),labels=c("Thu","Fri","Sat"), tck=-.05)
+     
+# Copy Image to PNG
+
+dev.copy(png,'plot2.png')
 
 dev.off()
